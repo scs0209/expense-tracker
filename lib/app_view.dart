@@ -1,3 +1,4 @@
+import 'package:expense_tracker/screens/home/views/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class MyAppView extends StatelessWidget {
@@ -9,13 +10,15 @@ class MyAppView extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Expense Tracker',
       theme: ThemeData(
-          colorScheme: ColorScheme.light(
-        surface: Colors.grey.shade100,
-        onSurface: Colors.black,
-        primary: Color(0xFF00B2E7),
-        secondary: Color(0xFFE064F7),
-        tertiary: Color(0xFFFF8D6C),
-      )),
+        colorScheme: ColorScheme.light(
+          background: Colors.grey.shade100,
+          onBackground: Colors.black,
+          primary: Color(0xFF00B2E7),
+          secondary: Color(0xFFE064F7),
+          tertiary: Color(0xFFFF8D6C),
+        ),
+      ),
+      home: HomeScreen(),
     );
   }
 }
