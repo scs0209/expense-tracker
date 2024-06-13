@@ -14,6 +14,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int index = 0;
+  Color selectedItem = Colors.blue;
+  Color unselectedItem = Colors.grey;
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +34,18 @@ class _HomeScreenState extends State<HomeScreen> {
           showSelectedLabels: false,
           showUnselectedLabels: false,
           elevation: 3,
-          items: const [
+          items: [
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.home,
+                color: index == 0 ? selectedItem : unselectedItem,
               ),
               label: 'Home',
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.insert_chart,
+                color: index == 1 ? selectedItem : unselectedItem,
               ),
               label: 'Stats',
             ),
