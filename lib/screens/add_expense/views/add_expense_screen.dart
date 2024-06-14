@@ -1,8 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
-class AddExpenseScreen extends StatelessWidget {
+class AddExpenseScreen extends StatefulWidget {
   const AddExpenseScreen({super.key});
+
+  @override
+  State<AddExpenseScreen> createState() => _AddExpenseScreenState();
+}
+
+class _AddExpenseScreenState extends State<AddExpenseScreen> {
+  TextEditingController expenseController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
+  DateTime selectDate = DateTime.now();
+
+  @override
+  void initState() {
+    dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +46,7 @@ class AddExpenseScreen extends StatelessWidget {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: TextFormField(
+                  controller: expenseController,
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
                     filled: true,
@@ -47,6 +65,9 @@ class AddExpenseScreen extends StatelessWidget {
               ),
               const SizedBox(height: 32),
               TextFormField(
+                controller: categoryController,
+                readOnly: true,
+                onTap: () {},
                 textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
                   filled: true,
@@ -55,6 +76,110 @@ class AddExpenseScreen extends StatelessWidget {
                     FontAwesomeIcons.list,
                     size: 16,
                     color: Colors.grey,
+                  ),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (ctx) {
+                          bool isExpanded = false;
+
+                          return StatefulBuilder(
+                            builder: (context, setState) {
+                              return AlertDialog(
+                                title: const Text('Create a Category'),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TextFormField(
+                                      // controller: dateController,
+                                      textAlignVertical:
+                                          TextAlignVertical.center,
+                                      // readOnly: true,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        hintText: 'Name',
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    TextFormField(
+                                      // controller: dateController,
+                                      onTap: () {
+                                        setState(() {
+                                          isExpanded = !isExpanded;
+                                        });
+                                      },
+                                      textAlignVertical:
+                                          TextAlignVertical.center,
+                                      readOnly: true,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        filled: true,
+                                        suffixIcon: const Icon(
+                                          Icons.keyboard_arrow_down,
+                                          size: 20,
+                                        ),
+                                        fillColor: Colors.white,
+                                        hintText: 'Icon',
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(12),
+                                          ),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                      ),
+                                    ),
+                                    isExpanded
+                                        ? Container(
+                                            width: double.infinity,
+                                            height: 200,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                bottom: Radius.circular(12),
+                                              ),
+                                            ),
+                                          )
+                                        : Container(),
+                                    const SizedBox(height: 16),
+                                    TextFormField(
+                                      // controller: dateController,
+                                      textAlignVertical:
+                                          TextAlignVertical.center,
+                                      // readOnly: true,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        hintText: 'Color',
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(
+                      FontAwesomeIcons.plus,
+                      size: 16,
+                      color: Colors.grey,
+                    ),
                   ),
                   hintText: 'Category',
                   border: OutlineInputBorder(
@@ -65,17 +190,26 @@ class AddExpenseScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               TextFormField(
+                controller: dateController,
                 textAlignVertical: TextAlignVertical.center,
                 readOnly: true,
-                onTap: () {
-                  showDatePicker(
+                onTap: () async {
+                  DateTime? newDate = await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now(),
+                    initialDate: selectDate,
                     firstDate: DateTime.now(),
                     lastDate: DateTime.now().add(
                       Duration(days: 365),
                     ),
                   );
+
+                  if (newDate != null) {
+                    setState(() {
+                      dateController.text =
+                          DateFormat('dd/MM/yyyy').format(newDate);
+                      selectDate = newDate;
+                    });
+                  }
                 },
                 decoration: InputDecoration(
                   filled: true,
