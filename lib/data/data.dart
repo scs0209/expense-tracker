@@ -43,3 +43,21 @@ List<Map<String, dynamic>> transactionData = [
     'date': 'Today',
   },
 ];
+
+List<IconData> icons = [
+  Icons.house,
+  Icons.person,
+  Icons.mail,
+  Icons.notifications,
+  Icons.camera,
+  Icons.directions_car,
+  Icons.coffee,
+  Icons.settings,
+  Icons.pets,
+  Icons.favorite,
+  Icons.star,
+  Icons.shopping_bag,
+  Icons.music_note,
+  Icons.video_file,
+  Icons.book,
+];
