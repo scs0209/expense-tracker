@@ -1,8 +1,12 @@
+import 'package:expense_repository/expense_repository.dart';
 import 'package:expense_tracker/data/data.dart';
+import 'package:expense_tracker/screens/add_expense/blocs/create_category_bloc/create_category_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 class AddExpenseScreen extends StatefulWidget {
   const AddExpenseScreen({super.key});
@@ -16,7 +20,6 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   TextEditingController categoryController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   DateTime selectDate = DateTime.now();
-  IconData? selectedIcon;
 
   @override
   void initState() {
@@ -86,10 +89,17 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                         context: context,
                         builder: (ctx) {
                           bool isExpanded = false;
+                          IconData? selectedIcon;
                           Color categoryColor = Colors.white;
+                          TextEditingController categoryNameController =
+                              TextEditingController();
+                          TextEditingController categoryIconController =
+                              TextEditingController();
+                          TextEditingController categoryColorController =
+                              TextEditingController();
 
                           return StatefulBuilder(
-                            builder: (context, setState) {
+                            builder: (ctx, setState) {
                               return AlertDialog(
                                 title: const Text('Create a Category'),
                                 content: SizedBox(
@@ -98,10 +108,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       TextFormField(
-                                        // controller: dateController,
+                                        controller: categoryNameController,
                                         textAlignVertical:
                                             TextAlignVertical.center,
-                                        // readOnly: true,
                                         decoration: InputDecoration(
                                           isDense: true,
                                           filled: true,
@@ -116,7 +125,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                       ),
                                       const SizedBox(height: 16),
                                       TextFormField(
-                                        // controller: dateController,
+                                        controller: categoryIconController,
                                         onTap: () async {
                                           setState(() {
                                             isExpanded = !isExpanded;
@@ -198,54 +207,62 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                           : Container(),
                                       const SizedBox(height: 16),
                                       TextFormField(
+                                        controller: categoryColorController,
                                         onTap: () {
                                           showDialog(
                                             context: context,
                                             builder: (ctx2) {
-                                              return AlertDialog(
-                                                content: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    ColorPicker(
-                                                      pickerColor:
-                                                          categoryColor,
-                                                      onColorChanged: (value) {
-                                                        setState(() {
-                                                          categoryColor = value;
-                                                        });
-                                                      },
-                                                    ),
-                                                    SizedBox(
-                                                      width: double.infinity,
-                                                      height: 50,
-                                                      child: TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
+                                              return BlocProvider.value(
+                                                value: context
+                                                    .read<CreateCategoryBloc>(),
+                                                child: AlertDialog(
+                                                  content: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      ColorPicker(
+                                                        pickerColor:
+                                                            categoryColor,
+                                                        onColorChanged:
+                                                            (value) {
+                                                          setState(() {
+                                                            categoryColor =
+                                                                value;
+                                                          });
                                                         },
-                                                        style: TextButton
-                                                            .styleFrom(
-                                                          backgroundColor:
-                                                              Colors.black,
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        12),
-                                                          ),
-                                                        ),
-                                                        child: const Text(
-                                                          'Save',
-                                                          style: TextStyle(
-                                                            fontSize: 22,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
                                                       ),
-                                                    )
-                                                  ],
+                                                      SizedBox(
+                                                        width: double.infinity,
+                                                        height: 50,
+                                                        child: TextButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          style: TextButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                                Colors.black,
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          12),
+                                                            ),
+                                                          ),
+                                                          child: const Text(
+                                                            'Save',
+                                                            style: TextStyle(
+                                                              fontSize: 22,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
                                                 ),
                                               );
                                             },
@@ -273,6 +290,16 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                         child: TextButton(
                                           onPressed: () {
                                             // Create Category Object and Pop
+                                            Category category = Category.empty;
+                                            category.categoryId = Uuid().v1();
+                                            category.name =
+                                                categoryNameController.text;
+                                            category.icon = selectedIcon;
+                                            category.color =
+                                                categoryColor.toString();
+                                            context
+                                                .read<CreateCategoryBloc>()
+                                                .add(CreateCategory(category));
                                             Navigator.pop(context);
                                           },
                                           style: TextButton.styleFrom(

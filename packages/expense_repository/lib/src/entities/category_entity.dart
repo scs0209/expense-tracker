@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
+
 class CategoryEntity {
   String categoryId;
   String name;
   int totalExpenses;
-  String icon;
+  IconData? icon;
   String color;
 
   CategoryEntity({
