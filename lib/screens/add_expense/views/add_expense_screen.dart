@@ -97,235 +97,279 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                               TextEditingController();
                           TextEditingController categoryColorController =
                               TextEditingController();
+                          bool isLoading = false;
 
-                          return StatefulBuilder(
-                            builder: (ctx, setState) {
-                              return AlertDialog(
-                                title: const Text('Create a Category'),
-                                content: SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      TextFormField(
-                                        controller: categoryNameController,
-                                        textAlignVertical:
-                                            TextAlignVertical.center,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          filled: true,
-                                          fillColor: Colors.white,
-                                          hintText: 'Name',
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      TextFormField(
-                                        controller: categoryIconController,
-                                        onTap: () async {
-                                          setState(() {
-                                            isExpanded = !isExpanded;
-                                          });
-                                        },
-                                        textAlignVertical:
-                                            TextAlignVertical.center,
-                                        readOnly: true,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          filled: true,
-                                          suffixIcon: const Icon(
-                                            Icons.keyboard_arrow_down,
-                                            size: 20,
-                                          ),
-                                          fillColor: Colors.white,
-                                          hintText: 'Icon',
-                                          border: OutlineInputBorder(
-                                            borderRadius: isExpanded
-                                                ? const BorderRadius.vertical(
-                                                    top: Radius.circular(12),
-                                                  )
-                                                : BorderRadius.circular(12),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                        ),
-                                      ),
-                                      isExpanded
-                                          ? Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              height: 200,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
+                          return BlocProvider.value(
+                            value: context.read<CreateCategoryBloc>(),
+                            child: BlocListener<CreateCategoryBloc,
+                                CreateCategoryState>(
+                              listener: (context, state) {
+                                if (state is CreateCategorySuccess) {
+                                  Navigator.pop(ctx);
+                                } else if (state is CreateCategoryLoading) {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                }
+                              },
+                              child: StatefulBuilder(
+                                builder: (ctx, setState) {
+                                  return AlertDialog(
+                                    title: const Text('Create a Category'),
+                                    content: SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TextFormField(
+                                            controller: categoryNameController,
+                                            textAlignVertical:
+                                                TextAlignVertical.center,
+                                            decoration: InputDecoration(
+                                              isDense: true,
+                                              filled: true,
+                                              fillColor: Colors.white,
+                                              hintText: 'Name',
+                                              border: OutlineInputBorder(
                                                 borderRadius:
-                                                    BorderRadius.vertical(
-                                                  bottom: Radius.circular(12),
-                                                ),
+                                                    BorderRadius.circular(12),
+                                                borderSide: BorderSide.none,
                                               ),
-                                              child: GridView.builder(
-                                                gridDelegate:
-                                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                                  crossAxisCount: 4,
-                                                  crossAxisSpacing: 8.0,
-                                                  mainAxisSpacing: 8.0,
-                                                ),
-                                                itemCount: icons.length,
-                                                itemBuilder: (context, int i) {
-                                                  Color iconColor =
-                                                      selectedIcon == icons[i]
-                                                          ? Colors.blue
-                                                          : Colors.black;
+                                            ),
+                                          ),
+                                          const SizedBox(height: 16),
+                                          TextFormField(
+                                            controller: categoryIconController,
+                                            onTap: () async {
+                                              setState(() {
+                                                isExpanded = !isExpanded;
+                                              });
+                                            },
+                                            textAlignVertical:
+                                                TextAlignVertical.center,
+                                            readOnly: true,
+                                            decoration: InputDecoration(
+                                              isDense: true,
+                                              filled: true,
+                                              suffixIcon: const Icon(
+                                                Icons.keyboard_arrow_down,
+                                                size: 20,
+                                              ),
+                                              fillColor: Colors.white,
+                                              hintText: 'Icon',
+                                              border: OutlineInputBorder(
+                                                borderRadius: isExpanded
+                                                    ? const BorderRadius
+                                                        .vertical(
+                                                        top:
+                                                            Radius.circular(12),
+                                                      )
+                                                    : BorderRadius.circular(12),
+                                                borderSide: BorderSide.none,
+                                              ),
+                                            ),
+                                          ),
+                                          isExpanded
+                                              ? Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  height: 200,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.vertical(
+                                                      bottom:
+                                                          Radius.circular(12),
+                                                    ),
+                                                  ),
+                                                  child: GridView.builder(
+                                                    gridDelegate:
+                                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                                      crossAxisCount: 4,
+                                                      crossAxisSpacing: 8.0,
+                                                      mainAxisSpacing: 8.0,
+                                                    ),
+                                                    itemCount: icons.length,
+                                                    itemBuilder:
+                                                        (context, int i) {
+                                                      Color iconColor =
+                                                          selectedIcon ==
+                                                                  icons[i]
+                                                              ? Colors.blue
+                                                              : Colors.black;
 
-                                                  return GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        selectedIcon = icons[i];
-                                                      });
+                                                      return GestureDetector(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            selectedIcon =
+                                                                icons[i];
+                                                          });
+                                                        },
+                                                        child: Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8),
+                                                          ),
+                                                          child: Icon(
+                                                            icons[i],
+                                                            color:
+                                                                iconColor, // 아이콘 색상 설정
+                                                            size: 24,
+                                                          ),
+                                                        ),
+                                                      );
                                                     },
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8),
-                                                      ),
-                                                      child: Icon(
-                                                        icons[i],
-                                                        color:
-                                                            iconColor, // 아이콘 색상 설정
-                                                        size: 24,
+                                                  ),
+                                                )
+                                              : Container(),
+                                          const SizedBox(height: 16),
+                                          TextFormField(
+                                            controller: categoryColorController,
+                                            onTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (ctx2) {
+                                                  return BlocProvider.value(
+                                                    value: context.read<
+                                                        CreateCategoryBloc>(),
+                                                    child: AlertDialog(
+                                                      content: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          ColorPicker(
+                                                            pickerColor:
+                                                                categoryColor,
+                                                            onColorChanged:
+                                                                (value) {
+                                                              setState(() {
+                                                                categoryColor =
+                                                                    value;
+                                                              });
+                                                            },
+                                                          ),
+                                                          SizedBox(
+                                                            width:
+                                                                double.infinity,
+                                                            height: 50,
+                                                            child: TextButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              style: TextButton
+                                                                  .styleFrom(
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black,
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              12),
+                                                                ),
+                                                              ),
+                                                              child: const Text(
+                                                                'Save Color',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 22,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ],
                                                       ),
                                                     ),
                                                   );
                                                 },
-                                              ),
-                                            )
-                                          : Container(),
-                                      const SizedBox(height: 16),
-                                      TextFormField(
-                                        controller: categoryColorController,
-                                        onTap: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (ctx2) {
-                                              return BlocProvider.value(
-                                                value: context
-                                                    .read<CreateCategoryBloc>(),
-                                                child: AlertDialog(
-                                                  content: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      ColorPicker(
-                                                        pickerColor:
-                                                            categoryColor,
-                                                        onColorChanged:
-                                                            (value) {
-                                                          setState(() {
-                                                            categoryColor =
-                                                                value;
-                                                          });
-                                                        },
-                                                      ),
-                                                      SizedBox(
-                                                        width: double.infinity,
-                                                        height: 50,
-                                                        child: TextButton(
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          style: TextButton
-                                                              .styleFrom(
-                                                            backgroundColor:
-                                                                Colors.black,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          12),
-                                                            ),
-                                                          ),
-                                                          child: const Text(
-                                                            'Save',
-                                                            style: TextStyle(
-                                                              fontSize: 22,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
                                               );
                                             },
-                                          );
-                                        },
-                                        textAlignVertical:
-                                            TextAlignVertical.center,
-                                        readOnly: true,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          filled: true,
-                                          fillColor: categoryColor,
-                                          hintText: 'Color',
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            borderSide: BorderSide.none,
+                                            textAlignVertical:
+                                                TextAlignVertical.center,
+                                            readOnly: true,
+                                            decoration: InputDecoration(
+                                              isDense: true,
+                                              filled: true,
+                                              fillColor: categoryColor,
+                                              hintText: 'Color',
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                borderSide: BorderSide.none,
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                          const SizedBox(height: 16),
+                                          SizedBox(
+                                            width: double.infinity,
+                                            height: kToolbarHeight,
+                                            child: isLoading == true
+                                                ? const Center(
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  )
+                                                : TextButton(
+                                                    onPressed: () {
+                                                      // Create Category Object and Pop
+
+                                                      Category category =
+                                                          Category.empty;
+                                                      category.categoryId =
+                                                          Uuid().v1();
+                                                      category.name =
+                                                          categoryNameController
+                                                              .text;
+                                                      category.iconCodePoint =
+                                                          selectedIcon!
+                                                              .codePoint;
+                                                      category.iconFontFamily =
+                                                          selectedIcon!
+                                                              .fontFamily!;
+                                                      category.color =
+                                                          categoryColor
+                                                              .toString();
+                                                      context
+                                                          .read<
+                                                              CreateCategoryBloc>()
+                                                          .add(CreateCategory(
+                                                              category));
+                                                      Navigator.pop(context);
+                                                    },
+                                                    style: TextButton.styleFrom(
+                                                      backgroundColor:
+                                                          Colors.black,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                    ),
+                                                    child: const Text(
+                                                      'Save',
+                                                      style: TextStyle(
+                                                        fontSize: 22,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                          )
+                                        ],
                                       ),
-                                      const SizedBox(height: 16),
-                                      SizedBox(
-                                        width: double.infinity,
-                                        height: kToolbarHeight,
-                                        child: TextButton(
-                                          onPressed: () {
-                                            // Create Category Object and Pop
-                                            Category category = Category.empty;
-                                            category.categoryId = Uuid().v1();
-                                            category.name =
-                                                categoryNameController.text;
-                                            category.iconCodePoint =
-                                                selectedIcon!.codePoint;
-                                            category.iconFontFamily =
-                                                selectedIcon!.fontFamily!;
-                                            category.color =
-                                                categoryColor.toString();
-                                            context
-                                                .read<CreateCategoryBloc>()
-                                                .add(CreateCategory(category));
-                                            Navigator.pop(context);
-                                          },
-                                          style: TextButton.styleFrom(
-                                            backgroundColor: Colors.black,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                          ),
-                                          child: const Text(
-                                            'Save',
-                                            style: TextStyle(
-                                              fontSize: 22,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                           );
                         },
                       );
