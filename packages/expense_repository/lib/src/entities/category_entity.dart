@@ -4,7 +4,7 @@ class CategoryEntity {
   int totalExpenses;
   int iconCodePoint;
   String iconFontFamily;
-  String color;
+  int color;
 
   CategoryEntity({
     required this.categoryId,

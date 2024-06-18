@@ -211,11 +211,10 @@ getCategoryCreation(BuildContext context) {
                                     selectedIcon!.codePoint;
                                 category.iconFontFamily =
                                     selectedIcon!.fontFamily!;
-                                category.color = categoryColor.toString();
+                                category.color = categoryColor.value;
                                 context
                                     .read<CreateCategoryBloc>()
                                     .add(CreateCategory(category));
-                                Navigator.pop(context);
                               },
                               style: TextButton.styleFrom(
                                 backgroundColor: Colors.black,

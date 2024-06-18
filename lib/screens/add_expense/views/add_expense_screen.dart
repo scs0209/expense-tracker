@@ -1,5 +1,7 @@
+import 'package:expense_tracker/screens/add_expense/blocs/get_categories_bloc/get_categories_bloc.dart';
 import 'package:expense_tracker/screens/add_expense/views/category_creation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -109,24 +111,35 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
-                    itemCount: 5,
-                    itemBuilder: (context, int i) {
-                      return Card(
-                        child: ListTile(
-                          leading: const Icon(
-                            Icons.lunch_dining,
-                            size: 24,
-                          ),
-                          title: const Text(
-                            'Food',
-                          ),
-                          tileColor: Colors.red,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      );
+                  child: BlocBuilder<GetCategoriesBloc, GetCategoriesState>(
+                    builder: (context, state) {
+                      if (state is GetCategoriesSuccess) {
+                        return ListView.builder(
+                          itemCount: state.categories.length,
+                          itemBuilder: (context, int i) {
+                            final category = state.categories[i];
+                            return Card(
+                              child: ListTile(
+                                leading: Icon(
+                                  category.icon,
+                                  size: 24,
+                                ),
+                                title: Text(
+                                  category.name,
+                                ),
+                                tileColor: Color(category.color),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
                     },
                   ),
                 ),

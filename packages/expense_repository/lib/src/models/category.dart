@@ -8,7 +8,7 @@ class Category {
   int totalExpenses;
   int iconCodePoint;
   String iconFontFamily;
-  String color;
+  int color;
 
   Category({
     required this.categoryId,
@@ -25,7 +25,7 @@ class Category {
     totalExpenses: 0,
     iconCodePoint: Icons.person.codePoint,
     iconFontFamily: Icons.person.fontFamily!,
-    color: '',
+    color: 0,
   );
 
   CategoryEntity toEntity() {
@@ -41,12 +41,13 @@ class Category {
 
   static Category fromEntity(CategoryEntity entity) {
     return Category(
-        categoryId: entity.categoryId,
-        name: entity.name,
-        totalExpenses: entity.totalExpenses,
-        iconCodePoint: entity.iconCodePoint,
-        iconFontFamily: entity.iconFontFamily,
-        color: entity.color);
+      categoryId: entity.categoryId,
+      name: entity.name,
+      totalExpenses: entity.totalExpenses,
+      iconCodePoint: entity.iconCodePoint,
+      iconFontFamily: entity.iconFontFamily,
+      color: entity.color,
+    );
   }
 
   IconData get icon => IconData(iconCodePoint, fontFamily: iconFontFamily);
