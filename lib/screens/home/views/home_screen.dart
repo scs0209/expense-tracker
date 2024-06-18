@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:expense_repository/expense_repository.dart';
 import 'package:expense_tracker/screens/add_expense/blocs/create_category_bloc/create_category_bloc.dart';
+import 'package:expense_tracker/screens/add_expense/blocs/get_categories_bloc/get_categories_bloc.dart';
 import 'package:expense_tracker/screens/add_expense/views/add_expense_screen.dart';
 import 'package:expense_tracker/screens/home/views/main_screen.dart';
 import 'package:flutter/material.dart';
@@ -62,8 +63,20 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.push(
             context,
             MaterialPageRoute<void>(
-              builder: (BuildContext context) => BlocProvider(
-                create: (context) => CreateCategoryBloc(FirebaseExpenseRepo()),
+              builder: (BuildContext context) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) =>
+                        CreateCategoryBloc(FirebaseExpenseRepo()),
+                  ),
+                  BlocProvider(
+                    create: (context) =>
+                        GetCategoriesBloc(FirebaseExpenseRepo())
+                          ..add(
+                            GetCategories(),
+                          ),
+                  ),
+                ],
                 child: const AddExpenseScreen(),
               ),
             ),

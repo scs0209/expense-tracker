@@ -1,4 +1,4 @@
-import 'package:expense_tracker/screens/add_expense/views/category_createtion.dart';
+import 'package:expense_tracker/screens/add_expense/views/category_creation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -90,8 +90,44 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   ),
                   hintText: 'Category',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(12),
+                    ),
                     borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+              Container(
+                height: 200,
+                width: MediaQuery.of(context).size.width,
+                // color: Colors.red,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(12),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.builder(
+                    itemCount: 5,
+                    itemBuilder: (context, int i) {
+                      return Card(
+                        child: ListTile(
+                          leading: const Icon(
+                            Icons.lunch_dining,
+                            size: 24,
+                          ),
+                          title: const Text(
+                            'Food',
+                          ),
+                          tileColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),

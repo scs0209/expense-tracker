@@ -26,9 +26,11 @@ getCategoryCreation(BuildContext context) {
               if (state is CreateCategorySuccess) {
                 Navigator.pop(ctx);
               } else if (state is CreateCategoryLoading) {
-                setState(() {
-                  isLoading = true;
-                });
+                setState(
+                  () {
+                    isLoading = true;
+                  },
+                );
               }
             },
             child: AlertDialog(
@@ -85,7 +87,7 @@ getCategoryCreation(BuildContext context) {
                         ? Container(
                             width: MediaQuery.of(context).size.width,
                             height: 200,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.vertical(
                                 bottom: Radius.circular(12),
@@ -93,7 +95,7 @@ getCategoryCreation(BuildContext context) {
                             ),
                             child: GridView.builder(
                               gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 4,
                                 crossAxisSpacing: 8.0,
                                 mainAxisSpacing: 8.0,
