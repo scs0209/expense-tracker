@@ -1,17 +1,17 @@
-import 'package:flutter/material.dart';
-
 class CategoryEntity {
   String categoryId;
   String name;
   int totalExpenses;
-  IconData? icon;
+  int iconCodePoint;
+  String iconFontFamily;
   String color;
 
   CategoryEntity({
     required this.categoryId,
     required this.name,
     required this.totalExpenses,
-    required this.icon,
+    required this.iconCodePoint,
+    required this.iconFontFamily,
     required this.color,
   });
 
@@ -20,7 +20,8 @@ class CategoryEntity {
       'categoryId': categoryId,
       'name': name,
       'totalExpenses': totalExpenses,
-      'icon': icon,
+      'iconCodePoint': iconCodePoint,
+      'iconFontFamily': iconFontFamily,
       'color': color,
     };
   }
@@ -30,7 +31,8 @@ class CategoryEntity {
       categoryId: doc['categoryId'],
       name: doc['name'],
       totalExpenses: doc['totalExpenses'],
-      icon: doc['icon'],
+      iconCodePoint: doc['iconCodePoint'],
+      iconFontFamily: doc['iconFontFamily'],
       color: doc['color'],
     );
   }

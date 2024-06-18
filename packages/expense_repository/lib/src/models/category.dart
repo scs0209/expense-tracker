@@ -6,14 +6,16 @@ class Category {
   String categoryId;
   String name;
   int totalExpenses;
-  IconData? icon;
+  int iconCodePoint;
+  String iconFontFamily;
   String color;
 
   Category({
     required this.categoryId,
     required this.name,
     required this.totalExpenses,
-    required this.icon,
+    required this.iconCodePoint,
+    required this.iconFontFamily,
     required this.color,
   });
 
@@ -21,7 +23,8 @@ class Category {
     categoryId: '',
     name: "",
     totalExpenses: 0,
-    icon: Icons.person,
+    iconCodePoint: Icons.person.codePoint,
+    iconFontFamily: Icons.person.fontFamily!,
     color: '',
   );
 
@@ -30,7 +33,8 @@ class Category {
       categoryId: categoryId,
       name: name,
       totalExpenses: totalExpenses,
-      icon: icon,
+      iconCodePoint: iconCodePoint,
+      iconFontFamily: iconFontFamily,
       color: color,
     );
   }
@@ -40,7 +44,10 @@ class Category {
         categoryId: entity.categoryId,
         name: entity.name,
         totalExpenses: entity.totalExpenses,
-        icon: entity.icon,
+        iconCodePoint: entity.iconCodePoint,
+        iconFontFamily: entity.iconFontFamily,
         color: entity.color);
   }
+
+  IconData get icon => IconData(iconCodePoint, fontFamily: iconFontFamily);
 }

@@ -294,7 +294,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                             category.categoryId = Uuid().v1();
                                             category.name =
                                                 categoryNameController.text;
-                                            category.icon = selectedIcon;
+                                            category.iconCodePoint =
+                                                selectedIcon!.codePoint;
+                                            category.iconFontFamily =
+                                                selectedIcon!.fontFamily!;
                                             category.color =
                                                 categoryColor.toString();
                                             context
