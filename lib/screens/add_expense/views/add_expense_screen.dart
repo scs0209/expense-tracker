@@ -1,3 +1,4 @@
+import 'package:expense_repository/expense_repository.dart';
 import 'package:expense_tracker/screens/add_expense/blocs/get_categories_bloc/get_categories_bloc.dart';
 import 'package:expense_tracker/screens/add_expense/views/category_creation.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +18,12 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   TextEditingController categoryController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   DateTime selectDate = DateTime.now();
+  late Expense expense;
 
   @override
   void initState() {
     dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+    expense = Expense.empty;
     super.initState();
   }
 
@@ -77,12 +80,19 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                       textAlignVertical: TextAlignVertical.center,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: Colors.white,
-                        prefixIcon: const Icon(
-                          FontAwesomeIcons.list,
-                          size: 16,
-                          color: Colors.grey,
-                        ),
+                        fillColor: expense.category == Category.empty
+                            ? Colors.white
+                            : Color(expense.category.color),
+                        prefixIcon: expense.category == Category.empty
+                            ? const Icon(
+                                FontAwesomeIcons.list,
+                                size: 16,
+                                color: Colors.grey,
+                              )
+                            : Icon(
+                                expense.category.icon,
+                                size: 24,
+                              ),
                         suffixIcon: IconButton(
                           onPressed: () async {
                             var newCategory =
@@ -125,6 +135,13 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                               final category = state.categories[i];
                               return Card(
                                 child: ListTile(
+                                  onTap: () {
+                                    setState(() {
+                                      expense.category = state.categories[i];
+                                      categoryController.text =
+                                          expense.category.name;
+                                    });
+                                  },
                                   leading: Icon(
                                     category.icon,
                                     size: 24,
