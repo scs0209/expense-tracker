@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:uuid/uuid.dart';
 
-getCategoryCreation(BuildContext context) {
+Future getCategoryCreation(BuildContext context) {
   return showDialog(
     context: context,
     builder: (ctx) {
@@ -17,6 +17,7 @@ getCategoryCreation(BuildContext context) {
       TextEditingController categoryIconController = TextEditingController();
       TextEditingController categoryColorController = TextEditingController();
       bool isLoading = false;
+      Category category = Category.empty;
 
       return BlocProvider.value(
         value: context.read<CreateCategoryBloc>(),
@@ -24,7 +25,7 @@ getCategoryCreation(BuildContext context) {
           return BlocListener<CreateCategoryBloc, CreateCategoryState>(
             listener: (context, state) {
               if (state is CreateCategorySuccess) {
-                Navigator.pop(ctx);
+                Navigator.pop(ctx, category);
               } else if (state is CreateCategoryLoading) {
                 setState(
                   () {
@@ -202,16 +203,15 @@ getCategoryCreation(BuildContext context) {
                             )
                           : TextButton(
                               onPressed: () {
-                                // Create Category Object and Pop
-
-                                Category category = Category.empty;
-                                category.categoryId = Uuid().v1();
-                                category.name = categoryNameController.text;
-                                category.iconCodePoint =
-                                    selectedIcon!.codePoint;
-                                category.iconFontFamily =
-                                    selectedIcon!.fontFamily!;
-                                category.color = categoryColor.value;
+                                setState(() {
+                                  category.categoryId = Uuid().v1();
+                                  category.name = categoryNameController.text;
+                                  category.iconCodePoint =
+                                      selectedIcon!.codePoint;
+                                  category.iconFontFamily =
+                                      selectedIcon!.fontFamily!;
+                                  category.color = categoryColor.value;
+                                });
                                 context
                                     .read<CreateCategoryBloc>()
                                     .add(CreateCategory(category));
